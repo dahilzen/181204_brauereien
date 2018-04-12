@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Small Multiples Line Chart</title>
+    <style>
+    body {
+        font: 10px sans-serif;
+        margin: 0;
+        text-align: center;
+    }
+
+    .line {
+        fill: none;
+        stroke: #F4A460;
+        stroke-width: 2px;
+    }
+
+    .area {
+        fill: #F4A460;
+        opacity: .2
+    }
+
+    .y.axis path,
+    .x.axis path,
+    .tick line {
+        stroke: lightgrey;
+    }
+
+    .headline {
+        font-size: larger;
+    }
+    </style>
+</head>
+
+<body>
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <script>
+    var margin = { top: 30, right: 20, bottom: 30, left: 50 },
+        width = 300 - margin.left - margin.right,
+        height = 200 - margin.top - margin.bottom;
+
+    var parseTime = d3.timeParse('%Y');
+
+    var x = d3.scaleTime()
+        .range([10, width + 10]);
+
+    var y = d3.scaleLinear()
+        .range([height, 0]);
+
+    var xAxis = d3.axisBottom()
+        .scale(x)
+        .ticks(3);
+
+    var yAxis = d3.axisLeft()
+        .scale(y)
+        .ticks(4);
+
+    var area = d3.area()
+        .x(function(d) { return x(d.date); })
+        .y0(height)
+        .y1(function(d) { return y(d.count); });
+
+    var line = d3.line()
+        .x(function(d) { return x(d.date); })
+        .y(function(d) { return y(d.count); });
+
+    d3.csv('data_bayern.csv').then(function(data) {
+        data.forEach(function(d) {
+            d.date = parseTime(d.date);
+            d.count = parseInt(d.count);
+        });
+
+        // Nest data by subject.
+        var subjects = d3.nest()
+            .key(function(d) { return d.subject; })
+            .entries(data);
+
+        console.log(subjects)
+
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y.domain([0, 1500]);
+
+        var svg = d3.select('body').selectAll('svg')
+            .data(subjects)
+            .enter().append('svg')
+            .style('margin-bottom', '10px')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        svg.append('path')
+            .attr('class', 'area')
+            .attr('d', function(d) { return area(d.values); });
+
+        svg.append('path')
+            .attr('class', 'line')
+            .attr('d', function(d) { return line(d.values); });
+
+        // Add the X Axis
+        svg.append('g')
+            .attr('class', 'x axis')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(xAxis);
+
+        // Add the Y Axis
+        svg.append('g')
+            .attr('class', 'y axis')
+            .attr('transform', 'translate(10)')
+            .call(yAxis);
+
+        // Add text
+        svg.append('text')
+            .attr('class', 'headline')
+            .attr('text-anchor', 'middle')
+            .attr('x', width / 2)
+            .text(function(d) {
+                return d.values[0].name;
+            })
+
+    });
+    </script>
+    <script src="https://pym.nprapps.org/pym.v1.min.js"></script>
+    <script>
+    var pymChild = new pym.Child();
+    </script>
+</body>
+
+</html>
