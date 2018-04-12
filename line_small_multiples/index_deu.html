@@ -67,7 +67,7 @@
         .x(function(d) { return x(d.date); })
         .y(function(d) { return y(d.count); });
 
-    d3.csv('data_deu.csv').then(function(data) {
+    d3.csv('datas.csv').then(function(data) {
         data.forEach(function(d) {
             d.date = parseTime(d.date);
             d.count = parseInt(d.count);
