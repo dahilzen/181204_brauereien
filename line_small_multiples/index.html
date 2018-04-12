@@ -9,6 +9,7 @@
         font: 10px sans-serif;
         margin: 0;
         text-align: center;
+        width: 100%;
     }
 
     .line {
@@ -35,10 +36,10 @@
 </head>
 
 <body>
-    <script src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/src/iframeResizer.js"></script>
+    <script src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/src/iframeResizer.contentWindow.js"></script>
     <script src='https://d3js.org/d3.v5.min.js'></script>
     <script>
-    var margin = { top: 30, right: 20, bottom: 30, left: 20 },
+    var margin = { top: 30, right: 20, bottom: 30, left: 50 },
         width = 300 - margin.left - margin.right,
         height = 200 - margin.top - margin.bottom;
 
