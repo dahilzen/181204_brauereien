@@ -35,6 +35,7 @@
 </head>
 
 <body>
+    <script src="https://cdn.rawgit.com/davidjbradshaw/iframe-resizer/master/src/iframeResizer.js"></script>
     <script src='https://d3js.org/d3.v5.min.js'></script>
     <script>
     var margin = { top: 30, right: 20, bottom: 30, left: 50 },
@@ -76,8 +77,6 @@
         var subjects = d3.nest()
             .key(function(d) { return d.subject; })
             .entries(data);
-
-        console.log(subjects)
 
         x.domain(d3.extent(data, function(d) { return d.date; }));
         y.domain([0, 1500]);
@@ -121,10 +120,6 @@
             })
 
     });
-    </script>
-    <script src="https://pym.nprapps.org/pym.v1.min.js"></script>
-    <script>
-    var pymChild = new pym.Child();
     </script>
 </body>
 
